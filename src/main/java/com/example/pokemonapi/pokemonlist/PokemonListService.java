@@ -2,27 +2,17 @@ package com.example.pokemonapi.pokemonlist;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PokemonListService {
-    private final PokeApiListNetworkRepository pokeApiListNetworkRepository;
+    private final FetchPokemonListUseCase pokemonListUseCase;
 
-    PokemonListService(PokeApiListNetworkRepository pokeApiListNetworkRepository) {
-        this.pokeApiListNetworkRepository = pokeApiListNetworkRepository;
+    public PokemonListService(FetchPokemonListUseCase pokemonListUseCase) {
+        this.pokemonListUseCase = pokemonListUseCase;
     }
 
-    List<PokeApiListItemResult> getPokemonItemList() {
-        List<PokeApiListItemResult> results = new ArrayList<>();
-        PokeApiListResult result;
-        int limit = 100;
-        int offset = 0;
-        do {
-            result = pokeApiListNetworkRepository.fetchPokemonListResult(limit, offset);
-            results.addAll(result.getResults());
-            offset += limit;
-        } while (result.getNext() != null);
-        return results;
+    List<PokemonListItemEntity> getPokemonItemList() {
+        return pokemonListUseCase.execute();
     }
 }
